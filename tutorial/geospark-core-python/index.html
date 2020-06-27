@@ -1889,6 +1889,7 @@ to use overloaded functions how Scala/Java GeoSpark API allows. ex. </p>
 
 <li> Use GeoSparkSQL DataFrame-RDD Adapter to convert a DataFrame to an SpatialRDD </li>
 
+<p>Note that, you have to name your column geometry</p>
 <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">geospark.utils.adapter</span> <span class="kn">import</span> <span class="n">Adapter</span>
 
 <span class="n">spatial_rdd</span> <span class="o">=</span> <span class="n">Adapter</span><span class="o">.</span><span class="n">toSpatialRdd</span><span class="p">(</span><span class="n">spatial_df</span><span class="p">)</span>
@@ -1899,6 +1900,10 @@ to use overloaded functions how Scala/Java GeoSpark API allows. ex. </p>
 <span class="o">&lt;</span><span class="n">geospark</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">geom_types</span><span class="o">.</span><span class="n">Envelope</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f1e5f29fe10</span><span class="o">&gt;</span>
 </pre></div>
 
+<p>or pass Geometry column name as a second argument</p>
+<div class="codehilite"><pre><span></span><span class="n">spatial_rdd</span> <span class="o">=</span> <span class="n">Adapter</span><span class="o">.</span><span class="n">toSpatialRdd</span><span class="p">(</span><span class="n">spatial_df</span><span class="p">,</span> <span class="s2">&quot;geom&quot;</span><span class="p">)</span>
+</pre></div>
+
 <p>For WKT/WKB/GeoJSON data, please use <mark>ST_GeomFromWKT / ST_GeomFromWKB / ST_GeomFromGeoJSON</mark> instead.</p>
 <h2 id="read-other-attributes-in-an-spatialrdd">Read other attributes in an SpatialRDD<a class="headerlink" href="#read-other-attributes-in-an-spatialrdd" title="Permanent link">&para;</a></h2>
 <p>Each SpatialRDD can carry non-spatial attributes such as price, age and name as long as the user sets <mark>carryOtherAttributes</mark> as <a href="#create-a-spatialrdd">TRUE</a>.</p>
@@ -1907,7 +1912,7 @@ to use overloaded functions how Scala/Java GeoSpark API allows. ex. </p>
 <div class="codehilite"><pre><span></span><span class="n">rdd_with_other_attributes</span> <span class="o">=</span> <span class="n">object_rdd</span><span class="o">.</span><span class="n">rawSpatialRDD</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">getUserData</span><span class="p">())</span>
 </pre></div></p>
 <h2 id="write-a-spatial-range-query">Write a Spatial Range Query<a class="headerlink" href="#write-a-spatial-range-query" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">geospark.core</span> <span class="kn">import</span> <span class="n">Envelope</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">geospark.core.geom.envelope</span> <span class="kn">import</span> <span class="n">Envelope</span>
 <span class="kn">from</span> <span class="nn">geospark.core.spatialOperator</span> <span class="kn">import</span> <span class="n">RangeQuery</span>
 
 <span class="n">range_query_window</span> <span class="o">=</span> <span class="n">Envelope</span><span class="p">(</span><span class="o">-</span><span class="mf">90.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.01</span><span class="p">,</span> <span class="mf">30.01</span><span class="p">,</span> <span class="mf">40.01</span><span class="p">)</span>
@@ -1931,7 +1936,7 @@ To create shapely geometries please follow official shapely <a href=""> document
 Once you specify an index type, 
 GeoSpark will build a local tree index on each of the SpatialRDD partition.</p>
 <p>To utilize a spatial index in a spatial range query, use the following code:</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">geospark.core</span> <span class="kn">import</span> <span class="n">Envelope</span>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">geospark.core.geom.envelope</span> <span class="kn">import</span> <span class="n">Envelope</span>
 <span class="kn">from</span> <span class="nn">geospark.core.enums</span> <span class="kn">import</span> <span class="n">IndexType</span>
 <span class="kn">from</span> <span class="nn">geospark.core.spatialOperator</span> <span class="kn">import</span> <span class="n">RangeQuery</span>
 
