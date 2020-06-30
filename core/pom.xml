@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
-            <version>0.10.0</version>
+            <version>0.14.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.vividsolutions</groupId>
