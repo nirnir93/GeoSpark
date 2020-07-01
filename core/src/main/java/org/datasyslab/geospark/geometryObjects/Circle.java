@@ -398,9 +398,12 @@ public class Circle
         String type2 = ((Geometry) g).getGeometryType();
         double radius1 = this.radius;
         double radius2 = ((Circle) g).radius;
+        Object userData = this.getUserData();
+        Object otherUserData = g.getUserData();
 
         if (type1 != type2) { return false; }
         if (radius1 != radius2) { return false; }
+        if (userData != otherUserData) { return false; }
         return this.centerGeometry.equals(((Circle) g).centerGeometry);
     }
 
