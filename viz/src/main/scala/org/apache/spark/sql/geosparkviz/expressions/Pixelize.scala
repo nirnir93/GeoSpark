@@ -30,7 +30,7 @@ import org.apache.spark.sql.types.StructType
 import org.datasyslab.geosparksql.utils.GeometrySerializer
 import org.datasyslab.geosparkviz.core.Serde.PixelSerializer
 import org.datasyslab.geosparkviz.utils.{ColorizeOption, RasterizationUtils}
-import org.locationtech.jts.geom.{LineString, MultiLineString, Point, Polygon}
+import org.locationtech.jts.geom._
 
 case class ST_Pixelize(inputExpressions: Seq[Expression])
   extends Generator with CodegenFallback with Logging{
