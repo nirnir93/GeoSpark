@@ -17,6 +17,8 @@
 package org.datasyslab.geospark.spatialPartitioning;
 
 import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.index.strtree.AbstractNode;
+import org.locationtech.jts.index.strtree.Boundable;
 import org.locationtech.jts.index.strtree.STRtree;
 
 import java.io.Serializable;
@@ -33,6 +35,37 @@ public class RtreePartitioning
 {
 
     /**
+     * A class that adds query bounds to STRtree
+     */
+    private class QueryableSTRtree extends STRtree {
+        public QueryableSTRtree(int nodeCapacity) {
+            super(nodeCapacity);
+        }
+        
+        public List<Envelope> queryBoundary() {
+            build();
+            List<Envelope> boundaries = new ArrayList();
+            queryBoundary(root, boundaries);	    
+            return boundaries;
+        }
+
+        private void queryBoundary(AbstractNode node, List<Envelope> matches) {
+            List childBoundables = node.getChildBoundables();
+            if (node.getLevel() == 0) {
+                matches.add((Envelope)node.getBounds());
+            } else {
+                for (int i = 0; i < childBoundables.size(); i++) {
+                    Boundable childBoundable = (Boundable) childBoundables.get(i);
+                    if (childBoundable instanceof AbstractNode) {
+                        queryBoundary((AbstractNode) childBoundable, matches);
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
      * The grids.
      */
     final List<Envelope> grids = new ArrayList<>();
@@ -47,7 +80,7 @@ public class RtreePartitioning
     public RtreePartitioning(List<Envelope> samples, int partitions)
             throws Exception
     {
-        STRtree strtree = new STRtree(samples.size() / partitions);
+        QueryableSTRtree strtree = new QueryableSTRtree(samples.size() / partitions);
         for (Envelope sample : samples) {
             strtree.insert(sample, sample);
         }
