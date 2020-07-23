@@ -50,5 +50,11 @@ object implicits {
 
     def getPoints: Array[Point] =
       geom.getCoordinates.map(coordinate => geometryFactory.createPoint(coordinate))
+
+    def toString(addUserData: Boolean) = {
+      val userData = geom.getUserData
+      val userDataString = if (addUserData && userData != null && userData != "") s"\t${userData}" else ""
+      geom.toString + userDataString
+    }
   }
 }

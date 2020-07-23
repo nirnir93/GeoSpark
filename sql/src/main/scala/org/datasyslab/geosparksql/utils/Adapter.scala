@@ -24,6 +24,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 import org.datasyslab.geospark.spatialRDD.SpatialRDD
+import org.apache.spark.sql.geosparksql.expressions.implicits._
 
 object Adapter {
 
@@ -153,7 +154,7 @@ object Adapter {
   }
 
   def toDf[T <:Geometry](spatialRDD: SpatialRDD[T], fieldNames: List[String], sparkSession: SparkSession): DataFrame = {
-    val rowRdd = spatialRDD.rawSpatialRDD.rdd.map[Row](f => Row.fromSeq(f.toString.split("\t",-1).toSeq))
+    val rowRdd = spatialRDD.rawSpatialRDD.rdd.map[Row](f => Row.fromSeq(f.toString(true).split("\t",-1).toSeq))
     if (fieldNames!=null && fieldNames.nonEmpty)
     {
       var fieldArray = new Array[StructField](fieldNames.size+1)
@@ -196,8 +197,8 @@ object Adapter {
 
   def toDf(spatialPairRDD: JavaPairRDD[Geometry, Geometry], leftFieldnames: List[String], rightFieldNames: List[String], sparkSession: SparkSession): DataFrame = {
     val rowRdd = spatialPairRDD.rdd.map[Row](f => {
-      val seq1 = f._1.toString.split("\t").toSeq
-      val seq2 = f._2.toString.split("\t").toSeq
+      val seq1 = f._1.toString(true).split("\t").toSeq
+      val seq2 = f._2.toString(true).split("\t").toSeq
       val result = seq1 ++ seq2
       Row.fromSeq(result)
     })
